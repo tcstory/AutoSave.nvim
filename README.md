@@ -230,6 +230,7 @@ These are the conditions that every file must meet so that it can be saved. If e
 + `exists`: (Boolean) if true, enables this condition. If the file doesn't exist it won't save it (e.g. if you `nvim stuff.txt` and don't save the file then this condition won't be met)
 + `modifiable`: (Boolean) if true, enables this condition. If the file isn't modifiable, then this condition isn't met.
 + `filetype_is_not`: (Table, Strings) if there is one or more filetypes (should be strings) in the table, it enables this condition. Use this to exclude filetypes that you don't want to automatically save.
++ `filetype_is`: (Table, Strings) if there is one or more filetypes (should be strings) in the table, it enables this condition. Use this to includes filetypes that you want to automatically save. This condition takes higher priority than `filetype_is_not`.
 
 ## Hooks
 Use them to execute code at certain events [described by their names]. These are the ones available:

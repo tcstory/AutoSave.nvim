@@ -20,6 +20,10 @@ local function table_has_value(tbl, value)
   return false
 end
 
+local function table_is_empty(tbl) 
+  return next(tbl) == nil
+end
+
 local function set_modified(value)
   modified = value
 end
@@ -50,30 +54,32 @@ end
 
 local function assert_user_conditions()
   local sc_exists, sc_filetype, sc_modifiable = true, true, true
-
-  for condition, value in pairs(opts["conditions"]) do
-    if (condition == "exists") then
-      if (value == true) then
-        if (fn.filereadable(fn.expand("%:p")) == 0) then
-          sc_exists = false
-          break
-        end
-      end
-    elseif (condition == "modifiable") then
-      if (value == true) then
-        if (api.nvim_eval([[&modifiable]]) == 0) then
-          sc_modifiable = false
-          break
-        end
-      end
-    elseif (condition == "filetype_is_not") then
-      if not (next(opts["conditions"]["filetype_is_not"]) == nil) then
-        if (table_has_value(opts["conditions"]["filetype_is_not"], api.nvim_eval([[&filetype]])) == true) then
-          sc_filetype = false
-          break
-        end
-      end
+  local conditions_tbl = opts["conditions"]
+  local filetype_is_tbl = conditions_tbl["filetype_is"]
+  local filetype_is_not_tbl = conditions_tbl["filetype_is_not"]
+  
+  if (conditions_tbl["exists"] == true) then
+    if (fn.filereadable(fn.expand("%:p")) == 0) then
+      sc_exists = false
     end
+  end
+
+  if (conditions_tbl["modifiable"] == true) then
+    if (api.nvim_eval([[&modifiable]]) == 0) then
+      sc_modifiable = false
+    end
+  end
+
+  if (table_is_empty(filetype_is_tbl) == false) then
+    if (table_has_value(filetype_is_tbl, api.nvim_eval("&filetype")) == false) then
+      sc_filetype = false
+    end
+  elseif (table_is_empty(filetype_is_not_tbl) == false) then
+    if (table_has_value(filetype_is_not_tbl, api.nvim_eval([[&filetype]])) == true) then
+      sc_filetype = false
+    end
+  else 
+    -- nothing to do
   end
 
   return {sc_exists, sc_filetype, sc_modifiable}
