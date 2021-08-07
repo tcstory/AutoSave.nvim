@@ -10,55 +10,55 @@ local M = {}
 
 
 local function set_status(value)
-	status_autosave = value
+  status_autosave = value
 end
 
 local function get_status()
-	return status_autosave
+  return status_autosave
 end
 
 local function on()
 
-	if (autosave.hook_before_on ~= nil) then
-		autosave.hook_before_on()
-	end
+  if (autosave.hook_before_on ~= nil) then
+    autosave.hook_before_on()
+  end
 
-	autocmds.load_autocommands()
-	set_status('on')
+  autocmds.load_autocommands()
+  set_status('on')
 
-	if (autosave.hook_after_on ~= nil) then
-		autosave.hook_after_on()
-	end
+  if (autosave.hook_after_on ~= nil) then
+    autosave.hook_after_on()
+  end
 end
 
 local function off()
 
-	if (autosave.hook_before_off ~= nil) then
-		autosave.hook_before_off()
-	end
+  if (autosave.hook_before_off ~= nil) then
+    autosave.hook_before_off()
+  end
 
-	autocmds.unload_autocommands()
-	set_status('off')
+  autocmds.unload_autocommands()
+  set_status('off')
 
-	if (autosave.hook_after_off ~= nil) then
-		autosave.hook_after_off()
-	end
+  if (autosave.hook_after_off ~= nil) then
+    autosave.hook_after_off()
+  end
 end
 
 function M.main(option)
-	option = option or 'load'
+  option = option or 'load'
 
-	if (option == 'toggle') then
-		if (get_status() == 'on') then
-			off()
-		else
-			on()
-		end
-	elseif (option == 'on') then
-		on()
-	elseif (option == 'off') then
-		off()
-	end
+  if (option == 'toggle') then
+    if (get_status() == 'on') then
+      off()
+    else
+      on()
+    end
+  elseif (option == 'on') then
+    on()
+  elseif (option == 'off') then
+    off()
+  end
 end
 
 return M
